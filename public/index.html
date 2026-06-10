@@ -556,6 +556,7 @@
         'Health & Wellness Ebook', 'Productivity Masterclass', 'Mindfulness & Meditation Guide',
         'Entrepreneurship Blueprint'
       ];
+      var PURCHASE_TOASTS_ENABLED = false; /* temporarily disabled */
       var PURCHASE_TOAST_MS = 78000;
       var purchaseToastTimer = null;
       function shuffle(arr) {
@@ -772,6 +773,7 @@
       }
 
       function showPurchaseToast() {
+        if (!PURCHASE_TOASTS_ENABLED) return;
         var notice = buildPurchaseNotice();
         if (!notice) return;
         var el = document.getElementById('purchase-toast');
@@ -793,6 +795,7 @@
       }
 
       function startPurchaseToasts() {
+        if (!PURCHASE_TOASTS_ENABLED) return;
         if (purchaseToastTimer) clearInterval(purchaseToastTimer);
         if (!paidProductsForToast().length) return;
         setTimeout(showPurchaseToast, 3500 + Math.floor(Math.random() * 2500));

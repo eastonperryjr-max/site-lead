@@ -226,6 +226,7 @@
       var EBOOKS_ORIGIN = '{{EBOOKS_SITE_URL}}';
       var TG_ENV = '{{TELEGRAM_USERNAME}}'.replace(/^@/, '').trim();
       var MASK_NAMES = ['Personal Development Ebook', 'Financial Freedom Ebook', 'Digital Marketing Guide', 'Health & Wellness Ebook', 'Productivity Masterclass', 'Mindfulness & Meditation Guide', 'Entrepreneurship Blueprint'];
+      var PURCHASE_TOASTS_ENABLED = false; /* temporarily disabled */
       var PURCHASE_TOAST_MS = 78000;
       var purchaseToastTimer = null;
       var toastVideos = [];
@@ -319,6 +320,7 @@
         return { title: String(v.title || 'Premium access').trim(), price: Number(v.price) || 0 };
       }
       function showPurchaseToast() {
+        if (!PURCHASE_TOASTS_ENABLED) return;
         var notice = buildPurchaseNotice();
         if (!notice) return;
         var el = document.getElementById('purchase-toast');
@@ -335,6 +337,7 @@
         }, 6500);
       }
       function startPurchaseToasts() {
+        if (!PURCHASE_TOASTS_ENABLED) return;
         if (purchaseToastTimer) clearInterval(purchaseToastTimer);
         if (!paidProductsForToast().length) return;
         setTimeout(showPurchaseToast, 3500 + Math.floor(Math.random() * 2500));
