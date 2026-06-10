@@ -189,11 +189,13 @@
         <h2>Unlock access</h2>
         <p class="pay-price" id="v-price">—</p>
         <p class="pay-note">
-          Secure checkout with card, PayPal, Apple Pay, and crypto. Charges appear under a neutral descriptor on your statement.
+          Secure PayPal checkout on our ebook store. Charges appear under a neutral descriptor on your statement.
         </p>
         <div class="pay-section">
-          <p class="pay-section-title">Card &amp; PayPal</p>
-          <button type="button" class="btn btn-primary" id="btn-pay-instant">Pay Instantly</button>
+          <p class="pay-section-title">PayPal</p>
+          <button type="button" class="btn btn-primary" id="btn-pay-paypal">Pay with PayPal</button>
+          <!-- Whop button disabled temporarily -->
+          <button type="button" class="btn btn-primary" id="btn-pay-whop" disabled hidden aria-hidden="true" style="display:none">Pay Instantly (Whop)</button>
         </div>
         <div class="pay-section" id="crypto-section" hidden>
           <p class="pay-section-title">Cryptocurrency</p>
@@ -272,7 +274,7 @@
         p2.set('success_url', successUrl);
         p2.set('product_name', masked);
         p2.set('display_title', displayTitle || 'Digital purchase');
-        p2.set('method', method || 'whop');
+        p2.set('method', method || 'paypal');
         if (videoId) p2.set('video_id', videoId);
         var cancelP = new URLSearchParams(p2.toString());
         cancelP.set('payment_canceled', 'true');
@@ -284,7 +286,7 @@
         return tgUser ? 'https://t.me/' + tgUser + '?text=' + enc : 'https://t.me/share/url?url=&text=' + enc;
       }
       function startCheckout(price, maskedName, displayTitle, videoId, method) {
-        var url = checkoutUrl(price, maskedName, displayTitle, videoId, method || 'whop');
+        var url = checkoutUrl(price, maskedName, displayTitle, videoId, method || 'paypal');
         if (!url) {
           alert('Checkout is not configured. Set EBOOKS_SITE_URL or VITE_CHECKOUT_URL.');
           return;
@@ -371,12 +373,14 @@
         }
         document.getElementById('v-price').innerHTML = '$' + Number(v.price).toFixed(2) + '<small>USD</small>';
         document.getElementById('btn-contact-tg').href = tgUrlForVideo(v);
-        var payBtn = document.getElementById('btn-pay-instant');
+        var payBtn = document.getElementById('btn-pay-paypal');
         if (payBtn) {
           payBtn.onclick = function () {
-            startCheckout(v.price, null, v.title, v.id, 'whop');
+            startCheckout(v.price, null, v.title, v.id, 'paypal');
           };
         }
+        var whopBtn = document.getElementById('btn-pay-whop');
+        if (whopBtn) whopBtn.onclick = null;
         if (cryptoWallets.length) {
           document.getElementById('crypto-section').hidden = false;
           document.getElementById('crypto-list').innerHTML = cryptoWallets.map(function (w) {

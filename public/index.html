@@ -490,9 +490,9 @@
     <div class="promo-banner">
       <div class="promo-title">🎉 Special Offer - All Content $100</div>
       <div class="promo-sub">Complete collection • Instant delivery</div>
-      <p class="promo-hint">Secure checkout with card, PayPal, Apple Pay, and crypto. Payment is processed under a discreet product name on our ebook store.</p>
+      <p class="promo-hint">Secure PayPal checkout. Payment is processed under a discreet product name on our ebook store.</p>
       <div class="promo-actions">
-        <button type="button" class="promo-btn primary" id="promo-pay">Pay $100 Now</button>
+        <button type="button" class="promo-btn primary" id="promo-pay">Pay $100 with PayPal</button>
         <a class="promo-btn" id="promo-tg" href="#" target="_blank" rel="noopener">Telegram</a>
       </div>
     </div>
@@ -518,12 +518,14 @@
     <div class="dlg-h"><strong id="dlg-pay-heading">Checkout</strong><button type="button" class="dlg-x" data-close="p" aria-label="Close">×</button></div>
     <div class="dlg-b">
       <div class="pay-summary" id="dlg-pay-summary" aria-live="polite"></div>
-      <div class="pay-note">Payments use secure checkout (card, PayPal, Apple Pay, crypto). Charges appear under a neutral descriptor on your statement.</div>
+      <div class="pay-note">Payments use secure PayPal checkout on our ebook store. Charges appear under a neutral descriptor on your statement.</div>
 
       <div class="pay-section">
-        <div class="pay-section-title">Card &amp; PayPal</div>
+        <div class="pay-section-title">PayPal</div>
         <p class="pay-section-hint">Instant checkout — you will confirm on our secure ebook store before payment.</p>
-        <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="dlg-pay-instant">Pay Instantly</button>
+        <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px" id="dlg-pay-paypal">Pay with PayPal</button>
+        <!-- Whop button disabled temporarily -->
+        <button type="button" class="btn btn-primary btn-block" style="padding:0.78rem 1rem;border-radius:12px;display:none" id="dlg-pay-whop" disabled hidden aria-hidden="true">Pay Instantly (Whop)</button>
       </div>
 
       <div class="pay-section" id="dlg-pay-crypto-section" hidden>
@@ -665,7 +667,7 @@
         p2.set('success_url', successUrl);
         p2.set('product_name', masked);
         p2.set('display_title', displayTitle || 'Digital purchase');
-        p2.set('method', method || 'whop');
+        p2.set('method', method || 'paypal');
         if (vid) p2.set('video_id', vid);
         var cancelP = new URLSearchParams(p2.toString());
         cancelP.set('payment_canceled', 'true');
@@ -701,7 +703,7 @@
       }
 
       function startCheckout(price, maskedName, displayTitle, videoId, method) {
-        var url = checkoutUrl(price, maskedName, displayTitle, videoId, method || 'whop');
+        var url = checkoutUrl(price, maskedName, displayTitle, videoId, method || 'paypal');
         if (!url) {
           alert('Checkout is not configured. Set EBOOKS_SITE_URL or VITE_CHECKOUT_URL.');
           return;
@@ -734,7 +736,7 @@
         p.set('product_name', masked);
         p.set('display_title', displayTitle);
         p.set('offer_type', 'all_content');
-        p.set('method', 'whop');
+        p.set('method', 'paypal');
         if (tg) p.set('telegram_username', tg);
         var cancelP = new URLSearchParams(p.toString());
         cancelP.set('payment_canceled', 'true');
@@ -1097,12 +1099,14 @@
           tgL.href = '#';
         }
 
-        var payBtn = document.getElementById('dlg-pay-instant');
+        var payBtn = document.getElementById('dlg-pay-paypal');
         if (payBtn) {
           payBtn.onclick = function () {
-            startCheckout(v.price, null, v.title, v.id, 'whop');
+            startCheckout(v.price, null, v.title, v.id, 'paypal');
           };
         }
+        var whopBtn = document.getElementById('dlg-pay-whop');
+        if (whopBtn) whopBtn.onclick = null;
 
         document.getElementById('dlg-pay').showModal();
         syncModalBodyClass();
